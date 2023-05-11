@@ -24,7 +24,7 @@ window.addEventListener('DOMContentLoaded', () => {
         tabsContent[i].classList.remove('hide');
         tabs[i].classList.add('tabheader__item_active');
     };
-    //werwerwer
+
     tabsPerent.addEventListener('click', (event) => {
         const target = event.target;
 
