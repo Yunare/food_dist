@@ -199,6 +199,16 @@ window.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    const getResource = async (url) => {
+        const res = await fetch(url);
+
+        if (!res.ok) {
+            new Error
+        }
+
+        return await res.json();
+    };
+
     new MenuCard(
         "img/tabs/sport.jpg",
         "vegy",
@@ -244,10 +254,22 @@ window.addEventListener('DOMContentLoaded', () => {
     };
 
     forms.forEach(item => {
-        postDate(item);
+        bindPostDate(item);
     });
 
-    function postDate(form) {
+    const postDate = async (url, data) => {
+        const res = await fetch(url, {
+            method: "POST",
+            headers: {
+                'Content-type': 'application/json'
+            },
+            body: data
+        });
+
+        return await res.json();
+    };
+
+    function bindPostDate(form) {
         form.addEventListener('submit', (e) => {
             e.preventDefault();
 
@@ -258,35 +280,22 @@ window.addEventListener('DOMContentLoaded', () => {
             display: block;
             margin: 0 auto;
             `;
-            // showThanksModal(message.loading);
-            // statusMessage.textContent = message.loading;
-            form.append(statusMessage);
 
-            // const request = new XMLHttpRequest();
-            // request.open('POST', 'server.php');
-            // request.setRequestHeader('Content-type', 'application/json');
+            form.append(statusMessage);
 
             const formData = new FormData(form);
 
-            const object = {};
-            formData.forEach(function (value, key) {
-                object[key] = value;
-            });
+            // const object = {};
+            // formData.forEach(function (value, key) {
+            //     object[key] = value;
+            // });
 
-            // const json = JSON.stringify(object);
+            const json = JSON.stringify(Object.fromEntries(formData.entries()));
 
-            fetch('server.php', {
-                method: "POST",
-                headers: {
-                    'Content-type': 'application/json'
-                },
-                body: JSON.stringify(object)
-            })
-                .then(data => data.text())
+            postDate('http://localhost:3000/requests', json)
                 .then(data => {
                     console.log(data);
                     showThanksModal(message.success);
-                    // form.reset();
                     statusMessage.remove();
                 })
                 .catch(() => {
@@ -295,20 +304,6 @@ window.addEventListener('DOMContentLoaded', () => {
                 .finally(() => {
                     form.reset();
                 });
-
-            // request.send(json);
-
-            // request.addEventListener('load', () => {
-            //     if (request.status === 200) {
-            //         console.log(request.response);
-            //         showThanksModal(message.success);
-            //         form.reset();
-            //         statusMessage.remove();
-            //     } else {
-            //         showThanksModal(message.failure);
-            //     };
-            // });
-
         });
 
     };
@@ -338,8 +333,8 @@ window.addEventListener('DOMContentLoaded', () => {
         }, 4000);
     };
 
-    fetch('https://jsonplaceholder.typicode.com/todos/1')
-        .then(response => response.json())
-        .then(json => console.log(json))
+    fetch('http://localhost:3000/menu')
+        .then(data => data.json())
+        .then(res => console.log(res.json()));
 
 });
