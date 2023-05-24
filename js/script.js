@@ -208,17 +208,17 @@ window.addEventListener('DOMContentLoaded', () => {
 
         return await res.json();
     };
-    PS D: \OSPanel\domains\localhost\Food_dist >
-        new MenuCard(
-            "img/tabs/sport.jpg",
-            "vegy",
-            'Меню "від секретаря Академії"',
-            'Меню "від секретаря Академії" - це новий підхід до приготовлення страв, в якому вигляд страви немає значення(Бо це ж не від архитектора там якогось), хоч вони на вигляд не дуже апетитні, але користь для органіма ви точно отримаєте. <br><br>',
-            9,
-            '.menu .container',
+    // PS D: \OSPanel\domains\localhost\Food_dist >
+    new MenuCard(
+        "img/tabs/sport.jpg",
+        "vegy",
+        'Меню "від секретаря Академії"',
+        'Меню "від секретаря Академії" - це новий підхід до приготовлення страв, в якому вигляд страви немає значення(Бо це ж не від архитектора там якогось), хоч вони на вигляд не дуже апетитні, але користь для органіма ви точно отримаєте. <br><br>',
+        9,
+        '.menu .container',
 
 
-        ).render();
+    ).render();
 
     new MenuCard(
         "img/tabs/дід-2.jpg",
