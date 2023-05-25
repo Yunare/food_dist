@@ -203,44 +203,51 @@ window.addEventListener('DOMContentLoaded', () => {
         const res = await fetch(url);
 
         if (!res.ok) {
-            new Error
+            throw new Error(`Could not fetch ${url}, status: ${res.status}`);
         }
 
         return await res.json();
     };
-    // PS D: \OSPanel\domains\localhost\Food_dist >
-    new MenuCard(
-        "img/tabs/sport.jpg",
-        "vegy",
-        'Меню "від секретаря Академії"',
-        'Меню "від секретаря Академії" - це новий підхід до приготовлення страв, в якому вигляд страви немає значення(Бо це ж не від архитектора там якогось), хоч вони на вигляд не дуже апетитні, але користь для органіма ви точно отримаєте. <br><br>',
-        9,
-        '.menu .container',
+
+    getResource('http://localhost:3000/menu')
+        .then(data => {
+            data.forEach(({ img, altimg, title, descr, price }) => {
+                new MenuCard(img, altimg, title, descr, price, '.menu .container').render();
+            });
+        });
+
+    // new MenuCard(
+    //     "img/tabs/sport.jpg",
+    //     "vegy",
+    //     'Меню "від секретаря Академії"',
+    //     'Меню "від секретаря Академії" - це новий підхід до приготовлення страв, в якому вигляд страви немає значення(Бо це ж не від архитектора там якогось), хоч вони на вигляд не дуже апетитні, але користь для органіма ви точно отримаєте. <br><br>',
+    //     9,
+    //     '.menu .container')
 
 
-    ).render();
+    // ).render();
 
-    new MenuCard(
-        "img/tabs/дід-2.jpg",
-        "elite",
-        'Меню “Преміум як у Діда”',
-        'Меню “Преміум як у Діда” - ми використовуємо не тільки гарний дизайн пакування, але і якісне виконання страв за рецептом самих Архонтів. Відчуйте себе унікальним завдяки їх рецептурі <br> PS: рецепти Райден не додані до меню.',
-        20,
-        '.menu .container',
-        'menu__item'
+    // new MenuCard(
+    //     "img/tabs/дід-2.jpg",
+    //     "elite",
+    //     'Меню “Преміум як у Діда”',
+    //     'Меню “Преміум як у Діда” - ми використовуємо не тільки гарний дизайн пакування, але і якісне виконання страв за рецептом самих Архонтів. Відчуйте себе унікальним завдяки їх рецептурі <br> PS: рецепти Райден не додані до меню.',
+    //     20,
+    //     '.menu .container',
+    //     'menu__item'
 
-    ).render();
+    // ).render();
 
-    new MenuCard(
-        "img/tabs/junks-2.jpg",
-        "post",
-        'Меню "Пісне як сенен-ай"',
-        'Наше спецеальне "Пісне як сенен-ай" меню - це винятковий підбір інгридіентів: повне відсутність продуктів твариного походження. Повна гармонія з собою та стриманість від сочних глав яою..<br><br><br>',
-        15,
-        '.menu .container',
-        'menu__item'
+    // new MenuCard(
+    //     "img/tabs/junks-2.jpg",
+    //     "post",
+    //     'Меню "Пісне як сенен-ай"',
+    //     'Наше спецеальне "Пісне як сенен-ай" меню - це винятковий підбір інгридіентів: повне відсутність продуктів твариного походження. Повна гармонія з собою та стриманість від сочних глав яою..<br><br><br>',
+    //     15,
+    //     '.menu .container',
+    //     'menu__item'
 
-    ).render();
+    // ).render();
 
     // Forms
 
@@ -328,8 +335,8 @@ window.addEventListener('DOMContentLoaded', () => {
         }, 4000);
     };
 
-    fetch('http://localhost:3000/menu')
-        .then(data => data.json())
-        .then(res => console.log(res.json()));
+    // fetch('http://localhost:3000/menu')
+    //     .then(data => data.json())
+    //     .then(res => console.log(res.json()))
 
 });
