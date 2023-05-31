@@ -319,85 +319,178 @@ window.addEventListener('DOMContentLoaded', () => {
     // Slider
 
 
+
     // отримуємо доступ до елементів на сторінці з якими ми будемо працювати
 
-    const slider = document.querySelectorAll('.offer__slide');
+    const slides = document.querySelectorAll('.offer__slide');
+    const slider = document.querySelector('.offer__slider');
     const prev = document.querySelector('.offer__slider-prev');
     const next = document.querySelector('.offer__slider-next');
     const total = document.querySelector('#total');
     const current = document.querySelector('#current');
-    const sliderWrapper = document.querySelector('.offer__slider-wrapper');
-    const sliderField = document.querySelector('.offer__alider-inner');
-    const width = window.getComputedStyle(sliderWrapper).width;
-
+    const slidesWrapper = document.querySelector('.offer__slider-wrapper');
+    const slidesField = document.querySelector('.offer__slider-inner');
+    const width = window.getComputedStyle(slidesWrapper).width;
 
     // треба опреділити тепершнє положення слайдеров завдяки шндексам
 
     let slideIndex = 1;
     let offset = 0;
 
+    // функціонал який підставляє нам нолик попереду цифри чи ні/ Ми змінюємо завдяки textContent  до потрібного нам елементу. 
+
+    if (slides.length < 10) {
+        total.textContent = `0${slides.length}`;
+    } else {
+        total.textContent = slides.length;
+    }
+
     // Встановлюємо ширину потрібному блоку 
-    sliderField.style.width = 100 * slider.length + "%";
+    slidesField.style.width = 100 * slides.length + "%";
     // ставимо наші слайди в ряд
-    sliderField.style.display = 'flex';
+    slidesField.style.display = 'flex';
     // щоб наші слайди плавно передвигались
-    sliderField.style.transition = '0.5s all';
+    slidesField.style.transition = '0.5s all';
     // тепер ми скриваємо елементи які не потрапляють в область відомості
-    sliderWrapper.style.overflow = 'hidden';
+    slidesWrapper.style.overflow = 'hidden';
 
 
     // перебираємо наші слайди і встановлюємо потрібну ширину кожному
-    slider.forEach(slide => {
+    slides.forEach(slide => {
         slide.style.width = width;
     });
+    // Модефікація слайдів
+    // блок з слайдерами ставим позицію релатів щоб нормально отображались елементи
+    slider.style.position = 'relative';
 
+    // добавляється дотси до наших слайдів завждяки CSS
+    const indicators = document.createElement('ol');
+    // створюємо пустий масив в який згодом положимо наші дотси (лішки - ті полоски)
+    const dots = [];
+    // добаваляємо не существующий клас для отображенія
+    indicators.classList.add('carousel-indicators');
+    // стілізуємо наш блок
+    indicators.style.cssText = `
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 15;
+        display: flex;
+        justify-content: center;
+        margin-right: 15%;
+        margin-left: 15%;
+        list-style: none;
+    `;
+    // Добавляємо нашу обертку в нутирь нашого слайдера
+    slider.append(indicators);
+    // тепер нам треба помістити в створений блок наші слайди
+    for (let i = 0; i < slides.length; i++) {
+
+        const dot = document.createElement('li');
+
+        dot.setAttribute('data-slide-to', i + 1);
+        dot.style.cssText = `
+        box-sizing: content-box;
+        flex: 0 1 auto;
+        width: 30px;
+        height: 6px;
+        margin-right: 3px;
+        margin-left: 3px;
+        cursor: pointer;
+        background-color: #fff;
+        background-clip: padding-box;
+        border-top: 10px solid transparent;
+        border-bottom: 10px solid transparent;
+        opacity: .5;
+        transition: opacity .6s ease;
+    `;
+
+        if (i == 0) {
+            dot.style.opacity = 1;
+        }
+        // добавляємо в індікатори самі дотси
+        indicators.append(dot);
+        // Добавляємо в масив новостворені дотси
+        dots.push(dot);
+    }
     // тепер навішуємо івенти на наші стрілочки, щоб рухати наші слайди
     // Ми робимо це задопомоги того що би здвигаємо картинку вліво чи в право
+
+
     next.addEventListener('click', () => {
-        if (offset == +width.slice(0, width.length - 2) * (slider.length - 1)) {
+        if (offset == +width.slice(0, width.length - 2) * (slides.length - 1)) {
             offset = 0;
         } else {
             offset += +width.slice(0, width.length - 2);
         }
 
-        sliderField.style.transform = `transLateX(-${offset}px)`;
+        slidesField.style.transform = `transLateX(-${offset}px)`;
 
-        if (slideIndex == slider.length) {
+        if (slideIndex == slides.length) {
             slideIndex = 1;
         } else {
             slideIndex++;
         }
 
-        if (slider.length < 10) {
-            current.textContent = `0${slideIndex}`
+        if (slides.length < 10) {
+            current.textContent = `0${slideIndex}`;
         } else {
-            current.textContent = `slideIndex`
+            current.textContent = slideIndex;
         }
+
+        dots.forEach(dot => dot.style.opacity = '.5');
+        dots[slideIndex - 1].style.opacity = '1';
     });
+
+
     prev.addEventListener('click', () => {
         if (offset == 0) {
-            offset = +width.slice(0, width.length - 2) * (slider.length - 1)
+            offset = +width.slice(0, width.length - 2) * (slides.length - 1)
         } else {
             offset -= +width.slice(0, width.length - 2);
         }
 
-        sliderField.style.transform = `transLateX(-${offset}px)`;
+        slidesField.style.transform = `transLateX(-${offset}px)`;
 
         if (slideIndex == 1) {
-            slideIndex = slider.length;
+            slideIndex = slides.length;
         } else {
             slideIndex--;
         }
 
-        if (slider.length < 10) {
-            current.textContent = `0${slideIndex}`
+        if (slides.length < 10) {
+            current.textContent = `0${slideIndex}`;
         } else {
-            current.textContent = `slideIndex`
+            current.textContent = slideIndex;
         }
-
+        dots.forEach(dot => dot.style.opacity = '.5');
+        dots[slideIndex - 1].style.opacity = '1';
     });
 
+    console.log(slideIndex);
 
+    dots.forEach(dot => {
+        dot.addEventListener('click', (e) => {
+
+            const slideTo = e.target.getAttribute('data-slide-to');
+            console.log(slideTo);
+            slideIndex = slideTo;
+            offset = +width.slice(0, width.length - 2) * (slideTo - 1);
+
+            slidesField.style.transform = `transLateX(-${offset}px)`;
+
+            if (slides.length < 10) {
+                current.textContent = `0${slideIndex}`;
+            } else {
+                current.textContent = slideIndex;
+            }
+            console.log(slideIndex);
+            dots.forEach(dot => dot.style.opacity = '.5');
+            dots[slideIndex - 1].style.opacity = 1;
+            console.log(slideIndex);
+        });
+    });
 
     // Запускаємо функцію з потрібними даними
 
@@ -406,18 +499,8 @@ window.addEventListener('DOMContentLoaded', () => {
     // створюємо функцію яка буде показувати або скривати потрібний слайдер.
     //  Першим в нашій умові ми говоримо, що якщо індекс слайду буде більше ніж довжина слайдів взагалом(тобто слайд дійде до кінця) то ми повертаємо індекс слайду 1, і навпаки якщо наш індекс слайду буде дорівнювати менше 0 то ми його поветаємо на кількусть довжини слайду взагалом.
 
-
-
-    // функціонал який підставляє нам нолик попереду цифри чи ні/ Ми змінюємо завдяки textContent  до потрібного нам елементу. 
-
-    // if (slider.length < 10) {
-    //     total.textContent = `0${slider.length}`;
-    // } else {
-    //     total.textContent = slider.length;
-    // }
-
     // function showSliders(n) {
-    //     if (n > slider.length) {
+    //     if (n > slides.length) {
     //         slideIndex = 1;
     //     }
 
