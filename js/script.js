@@ -319,7 +319,6 @@ window.addEventListener('DOMContentLoaded', () => {
     // Slider
 
 
-
     // отримуємо доступ до елементів на сторінці з якими ми будемо працювати
 
     const slides = document.querySelectorAll('.offer__slide');
@@ -339,11 +338,17 @@ window.addEventListener('DOMContentLoaded', () => {
 
     // функціонал який підставляє нам нолик попереду цифри чи ні/ Ми змінюємо завдяки textContent  до потрібного нам елементу. 
 
-    if (slides.length < 10) {
-        total.textContent = `0${slides.length}`;
-    } else {
-        total.textContent = slides.length;
-    }
+    const showNomber_0 = () => {
+        if (slides.length < 10) {
+            total.textContent = `0${slides.length}`;
+            current.textContent = `0${slideIndex}`;
+        } else {
+            total.textContent = slides.length;
+            current.textContent = slideIndex;
+        }
+    };
+
+    showNomber_0();
 
     // Встановлюємо ширину потрібному блоку 
     slidesField.style.width = 100 * slides.length + "%";
@@ -359,7 +364,9 @@ window.addEventListener('DOMContentLoaded', () => {
     slides.forEach(slide => {
         slide.style.width = width;
     });
+
     // Модефікація слайдів
+
     // блок з слайдерами ставим позицію релатів щоб нормально отображались елементи
     slider.style.position = 'relative';
 
@@ -384,6 +391,7 @@ window.addEventListener('DOMContentLoaded', () => {
     `;
     // Добавляємо нашу обертку в нутирь нашого слайдера
     slider.append(indicators);
+
     // тепер нам треба помістити в створений блок наші слайди
     for (let i = 0; i < slides.length; i++) {
 
@@ -391,19 +399,19 @@ window.addEventListener('DOMContentLoaded', () => {
 
         dot.setAttribute('data-slide-to', i + 1);
         dot.style.cssText = `
-        box-sizing: content-box;
-        flex: 0 1 auto;
-        width: 30px;
-        height: 6px;
-        margin-right: 3px;
-        margin-left: 3px;
-        cursor: pointer;
-        background-color: #fff;
-        background-clip: padding-box;
-        border-top: 10px solid transparent;
-        border-bottom: 10px solid transparent;
-        opacity: .5;
-        transition: opacity .6s ease;
+            box-sizing: content-box;
+            flex: 0 1 auto;
+            width: 30px;
+            height: 6px;
+            margin-right: 3px;
+            margin-left: 3px;
+            cursor: pointer;
+            background-color: #fff;
+            background-clip: padding-box;
+            border-top: 10px solid transparent;
+            border-bottom: 10px solid transparent;
+            opacity: .5;
+            transition: opacity .6s ease;
     `;
 
         if (i == 0) {
@@ -417,7 +425,11 @@ window.addEventListener('DOMContentLoaded', () => {
     // тепер навішуємо івенти на наші стрілочки, щоб рухати наші слайди
     // Ми робимо це задопомоги того що би здвигаємо картинку вліво чи в право
 
-
+    // створення функції показу активності дотсів(щоб не повторявся код по декілька разів)
+    const showDotsOpacity = () => {
+        dots.forEach(dot => dot.style.opacity = '.5');
+        dots[slideIndex - 1].style.opacity = '1';
+    }
     next.addEventListener('click', () => {
         if (offset == +width.slice(0, width.length - 2) * (slides.length - 1)) {
             offset = 0;
@@ -433,14 +445,9 @@ window.addEventListener('DOMContentLoaded', () => {
             slideIndex++;
         }
 
-        if (slides.length < 10) {
-            current.textContent = `0${slideIndex}`;
-        } else {
-            current.textContent = slideIndex;
-        }
+        showNomber_0();
 
-        dots.forEach(dot => dot.style.opacity = '.5');
-        dots[slideIndex - 1].style.opacity = '1';
+        showDotsOpacity();
     });
 
 
@@ -459,17 +466,14 @@ window.addEventListener('DOMContentLoaded', () => {
             slideIndex--;
         }
 
-        if (slides.length < 10) {
-            current.textContent = `0${slideIndex}`;
-        } else {
-            current.textContent = slideIndex;
-        }
-        dots.forEach(dot => dot.style.opacity = '.5');
-        dots[slideIndex - 1].style.opacity = '1';
+        showNomber_0();
+
+        showDotsOpacity();
     });
 
     console.log(slideIndex);
 
+    // Функціонал який дозволяє клікать на дотси і воно перемекає на потрібний нам слайд
     dots.forEach(dot => {
         dot.addEventListener('click', (e) => {
 
@@ -480,70 +484,63 @@ window.addEventListener('DOMContentLoaded', () => {
 
             slidesField.style.transform = `transLateX(-${offset}px)`;
 
-            if (slides.length < 10) {
-                current.textContent = `0${slideIndex}`;
-            } else {
-                current.textContent = slideIndex;
-            }
-            console.log(slideIndex);
-            dots.forEach(dot => dot.style.opacity = '.5');
-            dots[slideIndex - 1].style.opacity = 1;
-            console.log(slideIndex);
+            showNomber_0();
+
+            showDotsOpacity();
         });
+        fu
+        // Запускаємо функцію з потрібними даними
+
+        // showSliders(slideIndex);
+
+        // створюємо функцію яка буде показувати або скривати потрібний слайдер.
+        //  Першим в нашій умові ми говоримо, що якщо індекс слайду буде більше ніж довжина слайдів взагалом(тобто слайд дійде до кінця) то ми повертаємо індекс слайду 1, і навпаки якщо наш індекс слайду буде дорівнювати менше 0 то ми його поветаємо на кількусть довжини слайду взагалом.
+
+        // function showSliders(n) {
+        //     if (n > slides.length) {
+        //         slideIndex = 1;
+        //     }
+
+        //     if (n < 1) {
+        //         slideIndex = slider.length;
+        //     }
+
+        // Далі по функционалу ми скриваємо  слайди/ Ми перебираємо елементи як масив(томущо воно видається нам як масив завдяки - querySelectorAll) і до кожного item ми приміняємо item.style.display = 'none' - аби скрити їх зі сторінки
+
+        // slider.forEach(item => item.style.display = 'none');
+
+        // тепер нам потрібно показати слайд який потрібно. Ми указуємо наш елемент з слайдерами, він у нас іде як масив. Тому показуємо його індекс і на потрібному слайді показумємо картинку
+
+        // slider[slideIndex - 1].style.display = 'block';
+
+        // Тут ми показуємо тепершній слайд (число)
+
+        // if (slider.length < 10) {
+        //     current.textContent = `0${slideIndex}`;
+        // } else {
+        //     current.textContent = slideIndex;
+        // }
+        // };
+
+
+        // створюємо функционал який буде видоізміняти наш індекс при переключенію слайдів
+        // ця функція буде визивати нашу попередню функцію яку ми створили showSliders(), та поміщаємо конструкцію slideIndex += n яка буде збільшена на ту кількість яка прийде.
+
+        // function plusSlider(n) {
+        //     showSliders(slideIndex += n);
+        // }
+
+        // обработчик подій на prev та next
+        // prev на нього вішаємо обрабочик клік і коли це стається в нас в функції showSliders віднімається 1 що видозмінить індекс, і потім той індекс потрапить до функції showSliders() і змінить нам на потрібний слайдер
+        // next тут майже все те саме але тільки добавляємо 1.
+
+        // prev.addEventListener('click', () => {
+        //     plusSlider(-1);
+        // });
+
+        // next.addEventListener('click', () => {
+        //     plusSlider(1);
+        // });
     });
 
-    // Запускаємо функцію з потрібними даними
-
-    // showSliders(slideIndex);
-
-    // створюємо функцію яка буде показувати або скривати потрібний слайдер.
-    //  Першим в нашій умові ми говоримо, що якщо індекс слайду буде більше ніж довжина слайдів взагалом(тобто слайд дійде до кінця) то ми повертаємо індекс слайду 1, і навпаки якщо наш індекс слайду буде дорівнювати менше 0 то ми його поветаємо на кількусть довжини слайду взагалом.
-
-    // function showSliders(n) {
-    //     if (n > slides.length) {
-    //         slideIndex = 1;
-    //     }
-
-    //     if (n < 1) {
-    //         slideIndex = slider.length;
-    //     }
-
-    // Далі по функционалу ми скриваємо  слайди/ Ми перебираємо елементи як масив(томущо воно видається нам як масив завдяки - querySelectorAll) і до кожного item ми приміняємо item.style.display = 'none' - аби скрити їх зі сторінки
-
-    // slider.forEach(item => item.style.display = 'none');
-
-    // тепер нам потрібно показати слайд який потрібно. Ми указуємо наш елемент з слайдерами, він у нас іде як масив. Тому показуємо його індекс і на потрібному слайді показумємо картинку
-
-    // slider[slideIndex - 1].style.display = 'block';
-
-    // Тут ми показуємо тепершній слайд (число)
-
-    // if (slider.length < 10) {
-    //     current.textContent = `0${slideIndex}`;
-    // } else {
-    //     current.textContent = slideIndex;
-    // }
-    // };
-
-
-    // створюємо функционал який буде видоізміняти наш індекс при переключенію слайдів
-    // ця функція буде визивати нашу попередню функцію яку ми створили showSliders(), та поміщаємо конструкцію slideIndex += n яка буде збільшена на ту кількість яка прийде.
-
-    // function plusSlider(n) {
-    //     showSliders(slideIndex += n);
-    // }
-
-    // обработчик подій на prev та next
-    // prev на нього вішаємо обрабочик клік і коли це стається в нас в функції showSliders віднімається 1 що видозмінить індекс, і потім той індекс потрапить до функції showSliders() і змінить нам на потрібний слайдер
-    // next тут майже все те саме але тільки добавляємо 1.
-
-    // prev.addEventListener('click', () => {
-    //     plusSlider(-1);
-    // });
-
-    // next.addEventListener('click', () => {
-    //     plusSlider(1);
-    // });
 });
-
-
