@@ -44,7 +44,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
     // timer
 
-    const deadline = '2023-07-01';
+    const deadline = '2023-09-01';
 
     function getTimeRemaining(endtime) {
         let days, hours, minutes, seconds;
@@ -422,6 +422,11 @@ window.addEventListener('DOMContentLoaded', () => {
         // Добавляємо в масив новостворені дотси
         dots.push(dot);
     }
+
+    // створення функції - там де вказуємо ширину не відображались букви
+    function deleteNotDigits(str) {
+        return +str.replace(/\D/g, '');
+    }
     // тепер навішуємо івенти на наші стрілочки, щоб рухати наші слайди
     // Ми робимо це задопомоги того що би здвигаємо картинку вліво чи в право
 
@@ -431,10 +436,11 @@ window.addEventListener('DOMContentLoaded', () => {
         dots[slideIndex - 1].style.opacity = '1';
     }
     next.addEventListener('click', () => {
-        if (offset == +width.slice(0, width.length - 2) * (slides.length - 1)) {
+        // використовування методу реплейс(регулярних виразах) ми таким чином убираємо не потрібні нам букви (px) які не потрібні для нашої ширини
+        if (offset == deleteNotDigits(width) * (slides.length - 1)) {
             offset = 0;
         } else {
-            offset += +width.slice(0, width.length - 2);
+            offset += deleteNotDigits(width);
         }
 
         slidesField.style.transform = `transLateX(-${offset}px)`;
@@ -453,9 +459,9 @@ window.addEventListener('DOMContentLoaded', () => {
 
     prev.addEventListener('click', () => {
         if (offset == 0) {
-            offset = +width.slice(0, width.length - 2) * (slides.length - 1)
+            offset = deleteNotDigits(width) * (slides.length - 1)
         } else {
-            offset -= +width.slice(0, width.length - 2);
+            offset -= deleteNotDigits(width);
         }
 
         slidesField.style.transform = `transLateX(-${offset}px)`;
@@ -471,16 +477,16 @@ window.addEventListener('DOMContentLoaded', () => {
         showDotsOpacity();
     });
 
-    console.log(slideIndex);
+    // console.log(slideIndex);
 
     // Функціонал який дозволяє клікать на дотси і воно перемекає на потрібний нам слайд
     dots.forEach(dot => {
         dot.addEventListener('click', (e) => {
 
             const slideTo = e.target.getAttribute('data-slide-to');
-            console.log(slideTo);
+            // console.log(slideTo);
             slideIndex = slideTo;
-            offset = +width.slice(0, width.length - 2) * (slideTo - 1);
+            offset = deleteNotDigits(width) * (slideTo - 1);
 
             slidesField.style.transform = `transLateX(-${offset}px)`;
 
@@ -488,7 +494,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
             showDotsOpacity();
         });
-        fu
+
         // Запускаємо функцію з потрібними даними
 
         // showSliders(slideIndex);
@@ -505,42 +511,171 @@ window.addEventListener('DOMContentLoaded', () => {
         //         slideIndex = slider.length;
         //     }
 
-        // Далі по функционалу ми скриваємо  слайди/ Ми перебираємо елементи як масив(томущо воно видається нам як масив завдяки - querySelectorAll) і до кожного item ми приміняємо item.style.display = 'none' - аби скрити їх зі сторінки
+        //     // Далі по функционалу ми скриваємо  слайди/ Ми перебираємо елементи як масив(томущо воно видається нам як масив завдяки - querySelectorAll) і до кожного item ми приміняємо item.style.display = 'none' - аби скрити їх зі сторінки
 
-        // slider.forEach(item => item.style.display = 'none');
+        //     slider.forEach(item => item.style.display = 'none');
 
-        // тепер нам потрібно показати слайд який потрібно. Ми указуємо наш елемент з слайдерами, він у нас іде як масив. Тому показуємо його індекс і на потрібному слайді показумємо картинку
+        //     // тепер нам потрібно показати слайд який потрібно. Ми указуємо наш елемент з слайдерами, він у нас іде як масив. Тому показуємо його індекс і на потрібному слайді показумємо картинку
 
-        // slider[slideIndex - 1].style.display = 'block';
+        //     slider[slideIndex - 1].style.display = 'block';
 
-        // Тут ми показуємо тепершній слайд (число)
+        //     // Тут ми показуємо тепершній слайд (число)
 
-        // if (slider.length < 10) {
-        //     current.textContent = `0${slideIndex}`;
-        // } else {
-        //     current.textContent = slideIndex;
-        // }
+        //     if (slider.length < 10) {
+        //         current.textContent = `0${slideIndex}`;
+        //     } else {
+        //         current.textContent = slideIndex;
+        //     }
         // };
 
 
         // створюємо функционал який буде видоізміняти наш індекс при переключенію слайдів
         // ця функція буде визивати нашу попередню функцію яку ми створили showSliders(), та поміщаємо конструкцію slideIndex += n яка буде збільшена на ту кількість яка прийде.
 
-        // function plusSlider(n) {
-        //     showSliders(slideIndex += n);
-        // }
+        function plusSlider(n) {
+            showSliders(slideIndex += n);
+        };
 
         // обработчик подій на prev та next
         // prev на нього вішаємо обрабочик клік і коли це стається в нас в функції showSliders віднімається 1 що видозмінить індекс, і потім той індекс потрапить до функції showSliders() і змінить нам на потрібний слайдер
         // next тут майже все те саме але тільки добавляємо 1.
 
-        // prev.addEventListener('click', () => {
-        //     plusSlider(-1);
-        // });
+        prev.addEventListener('click', () => {
+            plusSlider(-1);
+        });
 
-        // next.addEventListener('click', () => {
-        //     plusSlider(1);
-        // });
+        next.addEventListener('click', () => {
+            plusSlider(1);
+        });
     });
 
+
+    // Calc початок 97 урок
+
+    // Отримуємо доступ до потрібних нам елементів
+    const result = document.querySelector('.calculating__result span');
+
+
+
+    let sex = '';
+    let haight = null;
+    let weight = null;
+    let age = null;
+    let ratio = 0;
+
+
+    if (localStorage.getItem('sex')) {
+        sex = localStorage.getItem('sex');
+    } else {
+        sex = 'female';
+        localStorage.setItem('sex', 'female');
+    };
+
+
+    if (localStorage.getItem('ratio')) {
+        ratio = localStorage.getItem('ratio');
+    } else {
+        ratio = 1.375;
+        localStorage.setItem('ratio', 1.375);
+    };
+
+
+    function initLocalSettings(selector, activeClass) {
+        const elements = document.querySelectorAll(selector);
+
+        elements.forEach(elem => {
+            elem.classList.remove(activeClass);
+            if (elem.getAttribute('id') === localStorage.getItem('sex')) {
+                elem.classList.add(activeClass);
+            };
+            if (elem.getAttribute('data-ratio') === localStorage.getItem('ratio')) {
+                elem.classList.add(activeClass);
+            };
+        })
+    };
+
+    initLocalSettings('#gender div', 'calculating__choose-item_active');
+    initLocalSettings('.calculating__choose_big', 'calculating__choose-item_active');
+
+    console.log(result);
+    // створюємо формулу яка буде розраховувати нам нашу дозу?
+
+    function calcTotal() {
+        // прописуємо умову, якщо щось не вказано то формула далі не буде нічого розраховувати, та видать нам повідомлення 
+        if (!sex || !haight || !weight || !age || !ratio) {
+            result.textContent = 'Котику, ти щось забув вказати~';
+            return;
+        };
+        // сама формула розрахунку
+        if (sex === 'female') {
+            result.textContent = Math.round((447.6 + (9.2 * weight) + (3.1 * haight) - (4.3 * age)) * ratio);
+        } else {
+            result.textContent = Math.round((88.36 + (13.4 * weight) + (4.6 * haight) - (5.7 * age)) * ratio);
+        }
+    };
+
+    calcTotal();
+
+    // створюємо функцію щоб отримувати інформацію з статичних блоків
+
+    function getStaticInformation(selector, activeClass) {
+        const element = document.querySelectorAll(selector);
+
+        element.forEach(elem => {
+            elem.addEventListener('click', (e) => {
+                if (e.target.getAttribute('data-ratio')) {
+                    ratio = +e.target.getAttribute('data-ratio');
+                    localStorage.setItem('ratio', +e.target.getAttribute('data-ratio'));
+                } else {
+                    sex = e.target.getAttribute('id');
+                    localStorage.setItem('sex', e.target.getAttribute('id'));
+                }
+
+                console.log(ratio, sex);
+
+                element.forEach(elem => {
+                    elem.classList.remove(activeClass);
+                });
+
+                e.target.classList.add(activeClass);
+
+                calcTotal();
+            });
+        });
+    };
+
+    getStaticInformation('#gender div', 'calculating__choose-item_active');
+    getStaticInformation('.calculating__choose_big', 'calculating__choose-item_active');
+
+    function getDynamicInformation(selector) {
+        const input = document.querySelector(selector);
+
+        input.addEventListener('input', () => {
+
+            if (input.value.match(/\D/g)) {
+                input.style.border = '1px solid red';
+            } else {
+                input.style.border = 'none';
+            };
+
+            switch (input.getAttribute('id')) {
+                case 'height':
+                    haight = +input.value;
+                    break;
+                case 'weight':
+                    weight = +input.value;
+                    break;
+                case 'age':
+                    age = +input.value;
+                    break;
+            };
+            calcTotal();
+        });
+
+
+    };
+
+    getDynamicInformation('#height');
+    getDynamicInformation('#weight');
+    getDynamicInformation('#age');
 });
